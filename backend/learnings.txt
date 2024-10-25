@@ -1,0 +1,30 @@
+1. Understanding of npm and package management
+
+i. npm understanding
+    npm - node package manager
+    npm is a platform where developers can find, install, and manage a wide range of packages that simplify and speed up the development process.
+
+ii. installing and uninstalling anything using npm
+    to install any package using npm we use -> npm install (package name) or npm i (package name) command 
+    to uninstall any package we use -> npm uninstall (package name) or npm un (package name)
+
+iii. node_modules
+     node_modules is a folder in a Node.js project that stores all the downloaded packages and their dependencies, which are installed  through npm. It contains the actual code for each package, allowing them to be used within the project.
+
+iv. dependencies
+    Dependencies are the packages that a project needs to run in production. They are essential for the core functionality of the application 
+
+v. devdependcies
+   DevDependencies are the packages needed only during development and testing, not in production
+
+vi. scripts - understanding default scripts path and custom scripts
+    Scripts in the package.json file are commands that help automate tasks in a project, like starting the app or running tests.
+    difference between npm start and npm run dev.
+
+
+2. Basic routing and middleware in Express.js
+
+i. Express.js framework
+   Express.js is a fast and flexible web framework for Node.js that simplifies building web applications and APIs by providing powerful routing, middleware, and HTTP utility methods. 
+ii. routing
+iii. middleware
