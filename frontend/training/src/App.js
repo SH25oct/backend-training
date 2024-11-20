@@ -1,27 +1,44 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUsers } from "./features/users/UsersSlice";
 import UsersTable from "./components/UsersTable";
+import AddUserModal from "./components/AddUserModal";
 
 const App = () => {
-  const [data, SetData] = useState("");
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.users);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const getData = async () => {
-    const response = await fetch("http://localhost:5000/profile");
-    if (!response.ok) {
-      throw new Error("network response was not ok ");
-    }
-    const result = await response.text();
-    SetData(result);
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
+  // Fetch users on component mount
   useEffect(() => {
-    getData();
+    dispatch(fetchUsers());
   }, []);
 
   return (
     <div>
-      <div>{data}</div>
-      <UsersTable />
+      <div className="flex items-end justify-end">
+        <button
+          onClick={openModal}
+          className="bg-blue-500 p-2 rounded-md mt-2 mr-2 text-white font-bold hover:bg-blue-700"
+        >
+          Add User
+        </button>
+      </div>
+
+      {/* Handle loading and error states */}
+      {loading ? (
+        <p>Loading users...</p>
+      ) : error ? (
+        <p className="text-red-500">Error fetching users: {error}</p>
+      ) : (
+        <UsersTable />
+      )}
+
+      {/* Add User Modal */}
+      {isModalOpen && <AddUserModal onClose={closeModal} />}
     </div>
   );
 };

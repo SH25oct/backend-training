@@ -1,52 +1,56 @@
 import React, { useState } from "react";
 
-const UserEditModal = ({ user, onClose, onSave }) => {
-  const [updatedUser, setUpdatedUser] = useState(user);
+const AddUserModal = ({ onClose, onSave }) => {
+  const [user, setUser] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    gender: "",
+    job_title: "",
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedUser({ ...updatedUser, [name]: value });
+    setUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSave = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/users/${updatedUser.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedUser),
-        }
-      );
+      const response = await fetch("http://localhost:5000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to update user");
+      const result = await response.json();
+      if (response.ok) {
+        console.log("User added successfully:", result.user);
+        onSave();
+        onClose();
+      } else {
+        console.error("Failed to save the user:", result.message);
       }
-
-      const data = await response.json();
-      console.log("User updated successfully:", data);
-      onSave(); // Refresh the user list in the parent component
-      onClose(); // Close the modal
     } catch (error) {
-      console.error("Error updating user:", error);
+      console.error("Error:", error);
     }
   };
-
-  if (!user) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded shadow-lg w-[90%] max-w-md">
-        <h2 className="text-xl font-semibold mb-4">Edit User</h2>
+        <h2 className="text-xl font-semibold mb-4">Add User</h2>
         <form>
           <div className="mb-4">
             <label className="block text-gray-700">First Name</label>
             <input
               type="text"
               name="first_name"
-              value={updatedUser.first_name}
+              value={user.first_name}
               onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
@@ -56,7 +60,7 @@ const UserEditModal = ({ user, onClose, onSave }) => {
             <input
               type="text"
               name="last_name"
-              value={updatedUser.last_name}
+              value={user.last_name}
               onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
@@ -66,7 +70,7 @@ const UserEditModal = ({ user, onClose, onSave }) => {
             <input
               type="email"
               name="email"
-              value={updatedUser.email}
+              value={user.email}
               onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
@@ -76,7 +80,7 @@ const UserEditModal = ({ user, onClose, onSave }) => {
             <input
               type="text"
               name="gender"
-              value={updatedUser.gender}
+              value={user.gender}
               onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
@@ -86,7 +90,7 @@ const UserEditModal = ({ user, onClose, onSave }) => {
             <input
               type="text"
               name="job_title"
-              value={updatedUser.job_title}
+              value={user.job_title}
               onChange={handleInputChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
@@ -113,4 +117,4 @@ const UserEditModal = ({ user, onClose, onSave }) => {
   );
 };
 
-export default UserEditModal;
+export default AddUserModal;
